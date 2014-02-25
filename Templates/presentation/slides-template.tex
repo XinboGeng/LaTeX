@@ -1,0 +1,304 @@
+
+\input{/Users/stille/GitHub/LaTeX-Template/presentation/presentation_1.tex}
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Slides for Power Reading Group]{Stochastic Joint Optimization of Wind Generation and Pumped-Storage Units in an Electricity Market} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Xinbo Geng} % Your name
+\institute[TAMU] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+Texas A\&M University\\ % Your institution for the title page
+\medskip
+\textit{gengxinbo@gmail.com} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+\section{Background}
+\begin{frame}
+\frametitle{Renewables, Problems, Solution}
+\begin{itemize}
+\item Increasing concern over the environmental impact
+\item Renewable energy sources become an important portion of generation mix.
+\item Renewables participate in electricity market competition.
+\item Wind Energy is the fast growing renewable energy.
+\end{itemize}
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title= Drawbacks of Wind]
+  \begin{itemize}
+  \item uncontrollable
+  \item uncertain
+  \item fluctuated
+  \end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title= Solution]
+the Joint Operation of wind power and pumped-storage units in electricity market.
+\end{tcolorbox}
+\end{frame}
+\begin{frame}
+\frametitle{Renewables in the Spot Market}
+\begin{columns}[c]
+\column{0.5\linewidth}
+   \includegraphics[width = \linewidth]{mrkt_schedule.png}
+
+\column{0.5\linewidth}
+For a wind producer in market:
+  \begin{enumerate}
+  \item[BF 10] forecast his production, build bids (for Day-ahead Market)
+  \item[BF 10] submit hourly bids for the following day
+  \item[D+1] (optional) submit balancing bids in real-time market
+  \item[D+1] optimize its operation/output
+  \item[D+1] Penalty because of the output deviation from the bids
+  \end{enumerate}
+\end{columns}
+\end{frame}
+%----------------------------------------------------------------------------------------
+\section{Method}
+\subsection{Stochastic Programming}
+\begin{frame}
+\frametitle{Stochastic Programming}
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title= Uncertainty]
+Day-ahead forecast error of wind power is huge (30\% - 50\%)
+
+Also uncertainty about market price.
+\end{tcolorbox}
+\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title= Solution - Stochastic Programming]
+Stochastic Programming deals with the problems of making optimal decisions under uncertainty.
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Two Stage Stochastic Programming}
+\begin{columns}
+\column{0.5\linewidth}
+  \includegraphics[width = 1.1\linewidth]{2_stage.png}
+\column{0.5\linewidth}
+\begin{description}
+\item[1st-Stage] Hourly bids submitted to the day-ahead market
+\item[2nd-Stage] Operation of the wind power and pumped-storage units
+\end{description}
+\end{columns}
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+\section{Model}
+\subsection{Uncoordinated Operation (UO)}
+\begin{frame}
+  \frametitle{Uncoordinated Operation (UO)}
+\begin{tcolorbox}[colback=white!5,colframe=white!40!black,title= Model of Wind Power]
+  \begin{equation}
+    \max{
+      \sum_{s\in S} \rho_s \cdot \sum_{h\in H}[\pi_{s,h}\cdot g_{s,h}^W - \omega\cdot\pi_{s,h}\cdot|g_{s,h}^W - x_{h}^W|]
+}
+  \end{equation}
+Bid constraints, output constraints
+\end{tcolorbox}
+The subscript $s,h$ means \textbf{in scenario $s$, in period $h$}
+\begin{columns}
+\column{0.5\linewidth}
+\textbf{Constants}
+\begin{itemize}
+\item[$S, s$] Set and index of scenarios
+\item[$H, h$] Set and index of hourly periods
+\item[$\rho_s$] Probability of scenarios
+\item[$\omega$] Penalty factor over the market price energy imbalances
+\item[$\pi_{s,h}$] Expected market price in scenario $s$ period $h$
+\end{itemize}
+
+\column{0.5\linewidth}
+\textbf{Variables}
+\begin{itemize}
+\item[$x_{h}^W$] Energy bid to the day-ahead market by the wind farm in period $h$
+\item[$g_{s,h}^W$] Power output of the wind farm in scenario $s$ in period $h$
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Uncoordinated Operation (UO)}
+\begin{tcolorbox}[colback=white!5,colframe=white!40!black,title= Model of Pumped-Storage Plant]
+  \begin{equation}
+    \begin{split}
+    \max
+      \sum_{s\in S} & \rho_s  \cdot  \sum_{h\in H}[\pi_{s,h}\cdot (g_{s,h}^p-d_{s,h}^p) -c^{su}\cdot y_{s,h} -c^{sd}\cdot z_{s,h} \\
+     & -  \omega\cdot\pi_{s,h}\cdot|g_{s,h}^p -d_{s,h}^p- x_{h}^p|]
+   \end{split}
+  \end{equation}
+\end{tcolorbox}
+The subscript $s,h$ means \textbf{in scenario $s$, in period $h$}
+\begin{columns}
+\column{0.5\linewidth}
+\textbf{Constants}
+\begin{itemize}
+\item[$c^{su},c^{sd}$] Start-up and shut-down costs of pumping units
+\end{itemize}
+\textbf{Variables}
+\begin{itemize}
+\item[$g_{s,h}^p$] Discharge power output of pumped-storage plant
+\item[$x_{h}^p$] Energy bid to the DA market
+\end{itemize}
+\column{0.5\linewidth}
+\begin{itemize}
+\item[$d_{s,h}^p$] Pumping power input of the pumped-storage plant
+\item[$y_{s,h},z_{s,h}$] (Integer)The number of units that are start-up and shut-down in the pumping mode
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\subsection{Joint Optimization (JO)}
+\begin{frame}
+  \frametitle{Joint Optimization (JO)}
+\begin{tcolorbox}[colback=white!5,colframe=white!40!black,title= Model of Pumped-Storage Plant]
+  \begin{equation}
+    \begin{split}
+    \max
+      \sum_{s\in S} & \rho_s  \cdot  \sum_{h\in H}[\pi_{s,h}\cdot (g_{s,h}^W + g_{s,h}^p-d_{s,h}^p) -c^{su}\cdot y_{s,h} -c^{sd}\cdot z_{s,h} \\
+     & -  \omega\cdot\pi_{s,h}\cdot|g_{s,h}^W+g_{s,h}^p -d_{s,h}^p- x_{h}^{wp}|] \nonumber
+   \end{split}
+  \end{equation}
+Bidding constraints, operation constraints
+\end{tcolorbox}
+The subscript $s,h$ means \textbf{in scenario $s$, in period $h$}
+\begin{columns}
+\column{0.5\linewidth}
+\textbf{Variables}
+\begin{itemize}
+\item[$g_{s,h}^p$] Discharge power output of pumped-storage plant
+\item[$g_{s,h}^W$] Power output of the wind farm
+\item[$x_{h}^{wp}$] Joint bid to the DA market
+\end{itemize}
+\column{0.5\linewidth}
+\begin{itemize}
+\item[$d_{s,h}^p$] Pumping power input of the pumped-storage plant
+\item[$y_{s,h},z_{s,h}$] (Integer)The number of units that are start-up and shut-down in the pumping mode
+\end{itemize}
+\end{columns}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+\section{Numerial Results}
+\subsection{Input Data}
+%----------------------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Scenarios}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.7\linewidth]{scenarios.png}
+  \caption{Scenarios}
+  \label{fig:scenarios}
+\end{figure}
+Number of Price scenarios: 20
+
+Number of Wind Production scenarios: 21
+
+Total Scenarios: $21\times 20 = 420$
+\end{frame}
+%----------------------------------------------------------------------------------------
+\subsection{Results}
+\subsubsection{Operation Results}
+\begin{frame}
+  \frametitle{Obtained Optimal Hourly Bid}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = \linewidth]{da_bids.png}
+  \caption{Optained Hourly Bid}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Obtained Operation Through the Day in the Lower Reservoir For Each Scenario in the Joint Optimization}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.7\linewidth]{operation.png}
+\end{figure}
+\end{frame}
+\subsubsection{Economic Resluts}
+\begin{frame}
+\frametitle{Economic Results}
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[htbp]{0.45\linewidth}
+    \includegraphics[width = \linewidth]{profits.png}
+    \caption{Profits (UO vs JO)}
+  \end{minipage}
+  \begin{minipage}[htbp]{0.45\linewidth}
+    \includegraphics[width = \linewidth]{penalties.png}
+    \caption{Penalties (UO vs JO)}
+  \end{minipage}
+\end{figure}
+\begin{itemize}
+\item Joint Operation has more profits.
+\item Joint Operation has less penalties.
+\end{itemize}
+\end{frame}
+\subsubsection{Interesting Results}
+\begin{frame}
+\frametitle{The influence of pumped-storage size}
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[htbp]{0.45\linewidth}
+    \includegraphics[width=\linewidth]{profit_increase.png}
+  \end{minipage}
+  \begin{minipage}[htbp]{0.45\linewidth}
+    \includegraphics[width=\linewidth]{penalty_reduction.png}
+  \end{minipage}
+\end{figure}
+From CB1 to CB7: the capacity of pumped-storage plant increases.
+\begin{itemize}
+\item When the pumped-storage plant dimensions are small compared to the wind farm power, profits increase faster
+\item When the value of the pumping capacity approaches that of the wind farm, profits remain almost constant.
+\end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+\section{Conclusions and Reviews}
+\subsection{Conclusions}
+\begin{frame}
+\frametitle{Conclusions and Future Work}
+\begin{itemize}
+\item In this paper, the author demonstrated that a joint short-term operation of a wind farm and of an isolated pumped-storage plant can be obtained by solving the presented optimization model.
+\item Two-stage stochastic programming approach has proven to be an effective way to model the real decision making process that wind park operators face in a spot-market framework under uncertainty.
+\item the models presented in this paper could be useful for assisting in investment decisions about new pumped-storage facilities.
+\end{itemize}
+Future research: introduce in the optimization model some risk-aversion measures.
+\end{frame}
+\subsection{Possible Problems}
+
+\begin{frame}
+\frametitle{Possible Problems}
+
+\begin{itemize}
+\item The scenarios (price and wind) are not convincing
+  \begin{itemize}
+  \item Price Scenarios are based on \textbf{``Modeling and forecasting electricity prices with input/output hidden Markov models,'' published on IEEE Trans. Power Syst., vol. 20, no. 1, pp. 1–12, Feb. 2005.}
+  \item Not mention how to generate wind scenarios? The characterics of wind scenarios? Special scenarios?
+  \end{itemize}
+\item Some deep analysis?
+\end{itemize}
+\end{frame}
+
+\end{document}
